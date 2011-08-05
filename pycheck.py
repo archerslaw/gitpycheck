@@ -1,4 +1,8 @@
 #-*- encoding: utf-8 -*-
+mailFrom = ""
+mailList = []
+mailPass = ""
+mailSubject = ""
 
 
 def fileToList(arrFilename):
@@ -6,13 +10,12 @@ def fileToList(arrFilename):
     arr = []
     for fileName in arrFilename:
         try:
-            lines = open(fileName, 'r').read()
-        except IOError:
+            lines = open(fileName, 'r').readlines()
+        except IOError: #如果文件不存在则创建新文件
             open(fileName, 'a').close()
             lines = ""
 
-        files = lines.split('\n')
-        arr.append(files)
+        arr.append(lines)
     return arr[:3], arr[-1]
 
 
@@ -71,25 +74,21 @@ if mailString:
     from email.MIMEMultipart import MIMEMultipart
 
     msg = MIMEMultipart()   #创建可包含附件的MIME对象
-    msg['Subject'] = '服务器报警'
-    msg['From'] = 'xkb100fun100@gmail.com'
-    msg['To'] = 'tim.sims86@gmail.com'
+    msg['Subject'] = mailSubject
+    msg['From'] = mailFrom
+    msg['To'] = mailList
 
-    pssw = "xkb@100fun100"
     txt = MIMEText(mailString, _charset='utf-8')
     msg.attach(txt)
-
 
     server = smtplib.SMTP('smtp.gmail.com', 587) #port 465 or 587
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login('xkb100fun100@gmail.com', pssw)
-    server.sendmail('rionkdr@gmail.com',
-                    'tim.sims86@gmail.com',
+    server.login(mailFrom, mailPass)
+
+    server.sendmail(mailFrom,
+                    mailList,
                     msg.as_string())
     server.close()
     writeToArchive(mails)
-
-else:
-    print "空"
