@@ -95,9 +95,8 @@ if mailString:
                     msg.as_string())
     server.close()
     writeToArchive(mails)
-    lines = open("sms.log", 'w')
-    lines.writelines(mailString)
-    lines.close()
-else:
-    lines = open("sms.log", 'w')
-    lines.close()
+
+    if config.sms_notify:
+        import sendsms
+        sendsms.data["Content"] = mailString
+        sendsms.posttohost(sendsms.data)
