@@ -1,0 +1,8 @@
+依赖软件：
+Git >= 1.7.
+Python >= 2.5 不兼容3.0
+
+使用设置:
+1.对监控目录配置git,并提交修改
+2.复制config.sample.py为config.py,gitcheck.sample.sh为gitcheck.sh并按说明修改对应的设置
+3.使用crontab定时执行gitcheck.sh

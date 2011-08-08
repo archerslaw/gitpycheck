@@ -1,8 +1,4 @@
 #-*- encoding: utf-8 -*-
-mailFrom = ""
-mailList = []
-mailPass = ""
-mailSubject = ""
 
 
 def fileToList(arrFilename):
@@ -10,12 +6,13 @@ def fileToList(arrFilename):
     arr = []
     for fileName in arrFilename:
         try:
-            lines = open(fileName, 'r').readlines()
+            lines = open(fileName, 'r').read()
         except IOError: #如果文件不存在则创建新文件
             open(fileName, 'a').close()
             lines = ""
 
-        arr.append(lines)
+        files = lines.split('\n')
+        arr.append(files)
     return arr[:3], arr[-1]
 
 
@@ -72,23 +69,35 @@ if mailString:
     import smtplib
     from email.MIMEText import MIMEText
     from email.MIMEMultipart import MIMEMultipart
+    try:
+        import config
+    except ImportError:
+        print "请拷贝config.sample.py为config.py，并进行配置"
+        import sys
+        sys.exit()
 
     msg = MIMEMultipart()   #创建可包含附件的MIME对象
-    msg['Subject'] = mailSubject
-    msg['From'] = mailFrom
-    msg['To'] = mailList
+    msg['Subject'] = config.mailSubject
+    msg['From'] = config.smtp_account
+    msg['To'] = ",".join(config.mailList)
 
     txt = MIMEText(mailString, _charset='utf-8')
     msg.attach(txt)
 
-    server = smtplib.SMTP('smtp.gmail.com', 587) #port 465 or 587
+    server = smtplib.SMTP(config.smtp_addr, config.smtp_port)
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login(mailFrom, mailPass)
+    server.login(config.smtp_account, config.smtp_password)
 
-    server.sendmail(mailFrom,
-                    mailList,
+    server.sendmail(config.smtp_account,
+                    config.mailList,
                     msg.as_string())
     server.close()
     writeToArchive(mails)
+    lines = open("sms.log", 'w')
+    lines.writelines(mailString)
+    lines.close()
+else:
+    lines = open("sms.log", 'w')
+    lines.close()
