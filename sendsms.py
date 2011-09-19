@@ -5,13 +5,13 @@ def constructData(data):
     """根据规则组成md5"""
     data['Content'] = data['Content'].decode("utf-8")
     data['Content'] = data['Content'].encode("gb2312")
-    string = "%s%s%s%s%s%s%s" % (data["ID"],
-                              data['UserName'],
-                              data['Md5key'],
-                              data['SendNum'],
-                              data['Content'],
-                              data['SendTiming'],
-                              data['SendTime'])
+    string = "%s" * 7  % (data["ID"],
+                          data['UserName'],
+                          data['Md5key'],
+                          data['SendNum'],
+                          data['Content'],
+                          data['SendTiming'],
+                          data['SendTime'])
     import hashlib
     m = hashlib.md5(string)
     data["MD5String"] = m.hexdigest()
@@ -20,7 +20,11 @@ def constructData(data):
     import urllib
     for key in data:
         val = str(data[key])
-        string =  urllib.quote(key) + "=" + urllib.quote(val) + "&"
+        formater = "%s" * 4
+        string = formater % (urllib.quote(key),
+                             "=",
+                             urllib.quote(val),
+                             "&")
         encode += string
 
     return encode[:-1]
@@ -31,10 +35,8 @@ def posttohost(data):
     sendNums = data.pop("sendNums")
     url = "http://sms.powereasy.net/MessageGate/Message.aspx"
     for num in sendNums:
-        import copy
-        tmpData = copy.copy(data)
-        tmpData["SendNum"] = num
-        string = constructData(tmpData)
+        data["SendNum"] = num
+        string = constructData(data)
         import urllib2
         req = urllib2.Request(url, string)
         urllib2.urlopen(req)
