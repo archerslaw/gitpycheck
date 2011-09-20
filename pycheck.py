@@ -11,8 +11,8 @@ def git_to_list(pwd):
     import os
     for command in git_command:
         git_line = pwd + command
-        l = [line.strip() for line in os.popen(git_line).readlines() 
-             if line !='\n']
+        l = [line.strip() for line in os.popen(git_line).readlines()
+             if line != '\n']
         git_list.append(l)
     return git_list
 
