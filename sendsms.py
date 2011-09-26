@@ -32,9 +32,8 @@ def constructData(data):
 
 def posttohost(data):
     """提交短信到发送列队"""
-    sendNums = data.pop("sendNums")
     url = "http://sms.powereasy.net/MessageGate/Message.aspx"
-    for num in sendNums:
+    for num in data["sendNums"]:
         data["SendNum"] = num
         string = constructData(data)
         import urllib2

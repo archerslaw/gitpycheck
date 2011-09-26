@@ -146,11 +146,11 @@ def main():
         send_mail(mail_string)
         write_to_archive(arr)
 
-    from config import sms_notify
-    if sms_notify:
-        import sendsms
-        sendsms.data["Content"] = mail_string
-        sendsms.posttohost(sendsms.data)
+        from config import sms_notify
+        if sms_notify:
+            import sendsms
+            sendsms.data["Content"] = mail_string
+            sendsms.posttohost(sendsms.data)
 
 if __name__ == "__main__":
     main()
