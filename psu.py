@@ -51,7 +51,7 @@ class PSU(object):
 
                     if msg_dict['warn_condiction'] > msg_dict['warn_num']:
                         warn_msg = msg_dict['warn_msg']
-                        warn_num = str(msg_dict['warn_num'])
+                        warn_num = str(msg_dict['warn_condiction'])
                         self.warning_report += warn_msg + warn_num + '\n'
 
     def get_sys_cpu_info(self):

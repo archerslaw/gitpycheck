@@ -39,6 +39,8 @@ def posttohost(data):
         import urllib2
         req = urllib2.Request(url, string)
         urllib2.urlopen(req)
+        import time
+        time.sleep(2)
 
 
 def getTime(formater):

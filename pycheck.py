@@ -78,23 +78,23 @@ def write_to_archive(array):
     archive.close()
 
 
-def construct_string(array, arrString):
+def construct_string(array, arr_string):
     """ 格式化邮件内容 """
-    mailString = ""
+    mail_string = ""
 
     for check in array:
         if check:
             index = array.index(check)  # 获取当前数组的下标
-            tmpString = """%s
+            tmp_string = """%s
             %r
-            """ % (arrString[index], array[index])
+            """ % (arr_string[index], array[index])
 
-            mailString += tmpString + '\n'
+            mail_string += tmp_string + '\n'
 
-    return mailString
+    return mail_string
 
 
-def send_mail(mailString):
+def send_mail(mail_string):
     """发送邮件"""
     import smtplib
     from email.MIMEText import MIMEText
@@ -106,12 +106,16 @@ def send_mail(mailString):
         import sys
         sys.exit()
 
+    import sendsms
+    sendtime = sendsms.getTime("%Y%m%d%H%M%S")
+    mail_string += '\n发送时间:' + sendtime
+
     msg = MIMEMultipart()   # 创建可包含附件的MIME对象
     msg['Subject'] = config.mailSubject
     msg['From'] = config.smtp_account
     msg['To'] = ",".join(config.mailList)
 
-    txt = MIMEText(mailString, _charset='utf-8')
+    txt = MIMEText(mail_string, _charset='utf-8')
     msg.attach(txt)
 
     server = smtplib.SMTP(config.smtp_addr, config.smtp_port)
